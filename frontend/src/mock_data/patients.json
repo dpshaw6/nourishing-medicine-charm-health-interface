@@ -1,18 +1,5 @@
 [
-    {
-        "id": "patient1",
-        "name": "Emily Zhang",
-        "condition": "Stress Relief"
-    },
-    {
-        "id": "patient2",
-        "name": "Michael Wang",
-        "condition": "Immune Support"
-    },
-    {
-        "id": "patient3",
-        "name": "Sophia Liu",
-        "condition": "Digestive Health"
-    }
+    {"id": "patient1", "name": "Emily Zhang", "conditionIds": ["cond1"], "formulaIds": ["form1"]},
+    {"id": "patient2", "name": "Michael Wang", "conditionIds": ["cond2"], "formulaIds": []},
+    {"id": "patient3", "name": "Sophia Liu", "conditionIds": ["cond3"], "formulaIds": []}
 ]
- 

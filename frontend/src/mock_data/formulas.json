@@ -1,0 +1,11 @@
+[
+    {
+        "id": "form1",
+        "name": "Formula A",
+        "ingredientIds": {
+            "ingr1": 10,
+            "ingr2": 5,
+            "ingr3": 15
+        }
+    }
+]
