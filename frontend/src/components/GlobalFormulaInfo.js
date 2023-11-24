@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Import useEffect here
+import React, { useState, useEffect } from 'react';
 
 const GlobalFormulaInfo = () => {
     const [massPerDay, setMassPerDay] = useState(9); // Default 9g
@@ -11,7 +11,7 @@ const GlobalFormulaInfo = () => {
     }, [massPerDay, numDays]);
 
     return (
-        <div>
+        <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', margin: '10px 0' }}>
             <div>
                 <label>Mass/Day (g): </label>
                 <input 

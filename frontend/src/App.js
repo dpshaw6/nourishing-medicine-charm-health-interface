@@ -6,6 +6,7 @@ import GlobalFormulaInfo from './components/GlobalFormulaInfo';
 import IngredientRows from './components/IngredientRows';
 import ActionButtons from './components/ActionButtons';
 import mockPatients from './data/patients.json';
+import './App.css';
 
 const App = () => {
     const [selectedPatientId, setSelectedPatientId] = useState('');
@@ -15,7 +16,13 @@ const App = () => {
     const handlePatientSelect = patientId => {
         setSelectedPatientId(patientId);
         const patient = mockPatients.find(p => p.id === patientId);
-        setSelectedFormulaId(patient?.formulaIds[0] || ''); // Assumes first formula if any
+
+        // Update both formula and condition based on the selected patient
+        const firstFormulaId = patient?.formulaIds.length > 0 ? patient.formulaIds[0] : '';
+        const firstConditionId = patient?.conditionIds.length > 0 ? patient.conditionIds[0] : '';
+
+        setSelectedFormulaId(firstFormulaId);
+        setSelectedConditionId(firstConditionId);
     };
 
     const handleConditionSelect = conditionId => {
@@ -35,15 +42,20 @@ const App = () => {
     };
 
     return (
-        <div>
-            <PatientSelect onPatientSelect={handlePatientSelect} />
-            <ConditionSelect 
-                selectedPatient={selectedPatientId}
-                onConditionSelect={handleConditionSelect} 
-            />
-            <FormulaDisplay selectedFormulaId={selectedFormulaId} />
-            <GlobalFormulaInfo />
-            <IngredientRows />
+        <div className="app-container">
+            <div className="row">
+                <PatientSelect onPatientSelect={handlePatientSelect} />
+                <ConditionSelect 
+                    selectedPatientId={selectedPatientId} // Corrected prop name
+                    onConditionSelect={handleConditionSelect} 
+                />
+                <FormulaDisplay selectedFormulaId={selectedFormulaId} />
+            </div>
+            <div className="row">
+                <GlobalFormulaInfo />
+            </div>
+            <h3 style={{ textAlign: 'center' }}>Formula</h3>
+            <IngredientRows selectedFormulaId={selectedFormulaId} />
             <ActionButtons 
                 onClear={handleClear} 
                 onCancel={handleCancel} 
