@@ -1,0 +1,52 @@
+[
+    {
+        "id": "ingr1",
+        "name": "Ren Shen",
+        "costPerGram": 2.0
+    },
+    {
+        "id": "ingr2",
+        "name": "Bai Zhu",
+        "costPerGram": 0.5
+    },
+    {
+        "id": "ingr3",
+        "name": "Fu Ling",
+        "costPerGram": 0.75
+    },
+    {
+        "id": "ingr4",
+        "name": "Gan Cao",
+        "costPerGram": 1.0
+    },
+    {
+        "id": "ingr5",
+        "name": "Mu Dan Pi",
+        "costPerGram": 0.6
+    },
+    {
+        "id": "ingr6",
+        "name": "Huang Qi",
+        "costPerGram": 0.8
+    },
+    {
+        "id": "ingr7",
+        "name": "Dang Gui",
+        "costPerGram": 1.5
+    },
+    {
+        "id": "ingr8",
+        "name": "Chai Hu",
+        "costPerGram": 1.2
+    },
+    {
+        "id": "ingr9",
+        "name": "Bai Shao",
+        "costPerGram": 0.9
+    },
+    {
+        "id": "ingr10",
+        "name": "Zhi Mu",
+        "costPerGram": 0.7
+    }
+]
