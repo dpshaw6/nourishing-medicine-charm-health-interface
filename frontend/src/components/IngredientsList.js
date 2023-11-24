@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import mockIngredients from '../mock_data/ingredients.json'; 
+import mockIngredients from '../data/ingredients.json'; 
 
 const IngredientsList = () => {
     const [ingredients, setIngredients] = useState(mockIngredients);
