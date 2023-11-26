@@ -38,34 +38,44 @@ const IngredientRow = ({ rowId, ingredientId, relativeAmount, totalMass, totalRe
     const patientCost = providerCost * markup;
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', margin: '5px 0' }}>
-            <select value={ingredientId} onChange={handleIngredientSelection}>
-                {mockIngredients.map(ing => (
-                    <option key={ing.id} value={ing.id}>{ing.name}</option>
-                ))}
-            </select>
-            <span>{absoluteAmount.toFixed(2)}g</span>
-            <span>${ingredient.costPerGram}/g</span>
-            <input 
-                type="checkbox" 
-                checked={overrideMarkup}
-                onChange={handleOverrideChange}
-            />
-            <input 
-                type="number"
-                value={markup}
-                onChange={handleMarkupChange}
-                disabled={!overrideMarkup}
-            />
-            <input 
-                type="number" 
-                value={relativeAmount} 
-                onChange={handleRelativeAmountChange}
-            />
-            <span>${providerCost.toFixed(2)}</span>
-            <span>${patientCost.toFixed(2)}</span>
-            <button onClick={() => onDelete(rowId)}>Delete</button>
-        </div>
+        <tr>
+            <td>
+                <select value={ingredientId} onChange={handleIngredientSelection}>
+                    {mockIngredients.map(ing => (
+                        <option key={ing.id} value={ing.id}>{ing.name}</option>
+                    ))}
+                </select>
+            </td>
+            <td>{absoluteAmount.toFixed(2)}g</td>
+            <td>${ingredient.costPerGram.toFixed(2)}/g</td>
+            <td>
+                <input 
+                    type="checkbox" 
+                    checked={overrideMarkup}
+                    onChange={handleOverrideChange}
+                />
+            </td>
+            <td>
+                <input 
+                    type="number"
+                    value={markup}
+                    onChange={handleMarkupChange}
+                    disabled={!overrideMarkup}
+                />
+            </td>
+            <td>
+                <input 
+                    type="number" 
+                    value={relativeAmount} 
+                    onChange={handleRelativeAmountChange}
+                />
+            </td>
+            <td>${providerCost.toFixed(2)}</td>
+            <td>${patientCost.toFixed(2)}</td>
+            <td>
+                <button onClick={() => onDelete(rowId)}>Delete</button>
+            </td>
+        </tr>
     );
 };
 

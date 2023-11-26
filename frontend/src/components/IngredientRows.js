@@ -65,43 +65,45 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
     const { totalProviderCost, totalPatientCost } = calculateTotals();
 
     return (
-        <div>
-            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', fontWeight: 'bold', margin: '10px 0' }}>
-                {/* Column headers */}
-                <span>Name</span>
-                <span>Absolute Amount</span>
-                <span>Cost/Gram</span>
-                <span>Markup</span>
-                <span>Override</span>
-                <span>Relative Amount</span>
-                <span>Provider Cost</span>
-                <span>Patient Cost</span>
-                <span>Action</span>
-            </div>
-            {rowsData.map(row => (
-                <IngredientRow 
-                    key={row.id}
-                    rowId={row.id}
-                    ingredientId={row.ingredientId}
-                    relativeAmount={row.relativeAmount}
-                    totalMass={totalMass}
-                    totalRelativeAmount={totalRelativeAmount}
-                    onRelativeAmountChange={(newAmount) => updateRowData(row.id, 'relativeAmount', newAmount)}
-                    onDelete={() => deleteIngredientRow(row.id)}
-                    onIngredientChange={(newIngredientId) => updateRowData(row.id, 'ingredientId', newIngredientId)}
-                />
-            ))}
-            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', margin: '10px 0' }}>
-                <button onClick={addIngredientRow}>Add Ingredient</button>
-                <span>Total</span>
-                {/* Empty spans to align with other columns */}
-                <span></span>
-                <span></span>
-                <span></span>
-                <span>${totalProviderCost.toFixed(2)}</span>
-                <span>${totalPatientCost.toFixed(2)}</span>
-            </div>        </div>
-    );
+        <table style={{ width: '100%', textAlign: 'center' }}>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Absolute Amount</th>
+                    <th>Cost/Gram</th>
+                    <th>Override</th>
+                    <th>Markup</th>
+                    <th>Relative Amount</th>
+                    <th>Provider Cost</th>
+                    <th>Patient Cost</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rowsData.map(row => (
+                    <IngredientRow 
+                        key={row.id}
+                        rowId={row.id}
+                        ingredientId={row.ingredientId}
+                        relativeAmount={row.relativeAmount}
+                        totalMass={totalMass}
+                        totalRelativeAmount={totalRelativeAmount}
+                        onRelativeAmountChange={(newAmount) => updateRowData(row.id, 'relativeAmount', newAmount)}
+                        onDelete={() => deleteIngredientRow(row.id)}
+                        onIngredientChange={(newIngredientId) => updateRowData(row.id, 'ingredientId', newIngredientId)}
+                    />
+                ))}
+                <tr>
+                    <td colSpan={5}></td>
+                    <td>Total</td>
+                    <td>${totalProviderCost.toFixed(2)}</td>
+                    <td>${totalPatientCost.toFixed(2)}</td>
+                    <td>
+                        <button onClick={addIngredientRow}>Add Ingredient</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>    );
 };
 
 export default IngredientRows;
