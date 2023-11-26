@@ -12,6 +12,7 @@ const App = () => {
     const [selectedPatientId, setSelectedPatientId] = useState('');
     const [selectedConditionId, setSelectedConditionId] = useState('');
     const [selectedFormulaId, setSelectedFormulaId] = useState('');
+    const [totalMass, setTotalMass] = useState(126); // Default total mass
 
     const handlePatientSelect = patientId => {
         setSelectedPatientId(patientId);
@@ -52,10 +53,10 @@ const App = () => {
                 <FormulaDisplay selectedFormulaId={selectedFormulaId} />
             </div>
             <div className="row">
-                <GlobalFormulaInfo />
+            <GlobalFormulaInfo totalMass={totalMass} setTotalMass={setTotalMass} />
             </div>
             <h3 style={{ textAlign: 'center' }}>Formula</h3>
-            <IngredientRows selectedFormulaId={selectedFormulaId} />
+            <IngredientRows selectedFormulaId={selectedFormulaId} totalMass={totalMass} />
             <ActionButtons 
                 onClear={handleClear} 
                 onCancel={handleCancel} 
