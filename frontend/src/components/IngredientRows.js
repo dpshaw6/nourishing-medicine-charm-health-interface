@@ -42,6 +42,28 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
 
     const totalRelativeAmount = calculateTotalRelativeAmount();
 
+    // Calculate total provider cost and total patient cost
+    const calculateTotals = () => {
+        let totalProviderCost = 0;
+        let totalPatientCost = 0;
+
+        rowsData.forEach(row => {
+            const ingredient = mockIngredients.find(ing => ing.id === row.ingredientId);
+            const absoluteAmount = totalRelativeAmount > 0
+                                    ? (row.relativeAmount / totalRelativeAmount) * totalMass
+                                    : 0;
+            const providerCost = absoluteAmount * ingredient.costPerGram;
+            const patientCost = providerCost * (row.overrideMarkup ? row.markup : 2.5); // Assuming 2.5 is the default markup
+
+            totalProviderCost += providerCost;
+            totalPatientCost += patientCost;
+        });
+
+        return { totalProviderCost, totalPatientCost };
+    };
+
+    const { totalProviderCost, totalPatientCost } = calculateTotals();
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', fontWeight: 'bold', margin: '10px 0' }}>
@@ -69,8 +91,16 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
                     onIngredientChange={(newIngredientId) => updateRowData(row.id, 'ingredientId', newIngredientId)}
                 />
             ))}
-            <button onClick={addIngredientRow}>Add Ingredient</button>
-        </div>
+            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', margin: '10px 0' }}>
+                <button onClick={addIngredientRow}>Add Ingredient</button>
+                <span>Total</span>
+                {/* Empty spans to align with other columns */}
+                <span></span>
+                <span></span>
+                <span></span>
+                <span>${totalProviderCost.toFixed(2)}</span>
+                <span>${totalPatientCost.toFixed(2)}</span>
+            </div>        </div>
     );
 };
 
