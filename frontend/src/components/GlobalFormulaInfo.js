@@ -10,32 +10,36 @@ const GlobalFormulaInfo = ({ totalMass, setTotalMass }) => {
     }, [massPerDay, numDays, setTotalMass]);
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', margin: '10px 0' }}>
-            <div>
-                <label>Mass/Day (g): </label>
-                <input 
-                    type="number" 
-                    value={massPerDay} 
-                    onChange={e => setMassPerDay(Number(e.target.value))}
-                />
-            </div>
-            <div>
-                <label>Number of Days: </label>
-                <input 
-                    type="number" 
-                    value={numDays} 
-                    onChange={e => setNumDays(Number(e.target.value))}
-                />
-            </div>
-            <div>
-                <label>Total Mass (g): </label>
-                <input 
-                    type="number" 
-                    value={totalMass}
-                    readOnly
-                />
-            </div>
-        </div>
+        <table style={{ width: '100%', textAlign: 'center', marginBottom: '20px' }}>
+            <tbody>
+                <tr>
+                    <td>
+                        <label>Mass/Day (g): </label>
+                        <input 
+                            type="number" 
+                            value={massPerDay} 
+                            onChange={e => setMassPerDay(Number(e.target.value))}
+                        />
+                    </td>
+                    <td>
+                        <label>Number of Days: </label>
+                        <input 
+                            type="number" 
+                            value={numDays} 
+                            onChange={e => setNumDays(Number(e.target.value))}
+                        />
+                    </td>
+                    <td>
+                        <label>Total Mass (g): </label>
+                        <input 
+                            type="number" 
+                            value={totalMass}
+                            readOnly
+                        />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     );
 };
 

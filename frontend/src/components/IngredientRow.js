@@ -46,7 +46,14 @@ const IngredientRow = ({ rowId, ingredientId, relativeAmount, totalMass, totalRe
                     ))}
                 </select>
             </td>
-            <td>{absoluteAmount.toFixed(2)}g</td>
+            <td>{absoluteAmount.toFixed(1)}g</td>
+            <td>
+                <input 
+                    type="number" 
+                    value={relativeAmount} 
+                    onChange={handleRelativeAmountChange}
+                />
+            </td>
             <td>${ingredient.costPerGram.toFixed(2)}/g</td>
             <td>
                 <input 
@@ -61,13 +68,6 @@ const IngredientRow = ({ rowId, ingredientId, relativeAmount, totalMass, totalRe
                     value={markup}
                     onChange={handleMarkupChange}
                     disabled={!overrideMarkup}
-                />
-            </td>
-            <td>
-                <input 
-                    type="number" 
-                    value={relativeAmount} 
-                    onChange={handleRelativeAmountChange}
                 />
             </td>
             <td>${providerCost.toFixed(2)}</td>

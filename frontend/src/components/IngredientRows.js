@@ -70,10 +70,10 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
                 <tr>
                     <th>Name</th>
                     <th>Absolute Amount</th>
+                    <th>Ingredient Ratio</th>
                     <th>Cost/Gram</th>
                     <th>Override</th>
                     <th>Markup</th>
-                    <th>Relative Amount</th>
                     <th>Provider Cost</th>
                     <th>Patient Cost</th>
                     <th>Action</th>
