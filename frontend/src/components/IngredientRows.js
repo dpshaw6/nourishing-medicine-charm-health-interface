@@ -5,6 +5,7 @@ import mockFormulas from '../data/formulas.json';
 
 const IngredientRows = ({ selectedFormulaId, totalMass }) => {
     const [rowsData, setRowsData] = useState([]);
+    const [amountType, setAmountType] = useState('relative'); // 'relative' or 'absolute'
 
     useEffect(() => {
         if (selectedFormulaId) {
@@ -41,7 +42,17 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
     };
 
     const totalRelativeAmount = calculateTotalRelativeAmount();
+    
+    const handleAmountTypeChange = (event) => {
+        setAmountType(event.target.value);
+    };
 
+    const handleAbsoluteAmountChange = (rowId, newAmount) => {
+        setRowsData(rowsData.map(row => 
+            row.id === rowId ? { ...row, inputAbsoluteAmount: newAmount } : row
+        ));
+    };
+    
     // Calculate total provider cost and total patient cost
     const calculateTotals = () => {
         let totalProviderCost = 0;
@@ -49,11 +60,19 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
 
         rowsData.forEach(row => {
             const ingredient = mockIngredients.find(ing => ing.id === row.ingredientId);
-            const absoluteAmount = totalRelativeAmount > 0
-                                    ? (row.relativeAmount / totalRelativeAmount) * totalMass
-                                    : 0;
-            const providerCost = absoluteAmount * ingredient.costPerGram;
-            const patientCost = providerCost * (row.overrideMarkup ? row.markup : 2.5); // Assuming 2.5 is the default markup
+            
+            // Determine the effective absolute amount based on the current mode
+            let effectiveAbsoluteAmount;
+            if (amountType === 'relative') {
+                effectiveAbsoluteAmount = totalRelativeAmount > 0
+                                            ? (row.relativeAmount / totalRelativeAmount) * totalMass
+                                            : 0;
+            } else {
+                effectiveAbsoluteAmount = row.inputAbsoluteAmount;
+            }
+
+            const providerCost = effectiveAbsoluteAmount * (ingredient ? ingredient.costPerGram : 0);
+            const patientCost = providerCost * (row.overrideMarkup ? row.markup : 2.5);
 
             totalProviderCost += providerCost;
             totalPatientCost += patientCost;
@@ -69,8 +88,20 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Absolute Amount</th>
-                    <th>Ingredient Ratio</th>
+                    <th>
+                        <input 
+                            type="radio" 
+                            value="absolute" 
+                            checked={amountType === 'absolute'}
+                            onChange={handleAmountTypeChange}
+                        />Absolute Amount</th>
+                    <th>
+                        <input 
+                            type="radio" 
+                            value="relative" 
+                            checked={amountType === 'relative'}
+                            onChange={handleAmountTypeChange}
+                        />Ingredient Ratio</th>
                     <th>Cost/Gram</th>
                     <th>Override</th>
                     <th>Markup</th>
@@ -86,7 +117,12 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
                         rowId={row.id}
                         ingredientId={row.ingredientId}
                         relativeAmount={row.relativeAmount}
-                        totalMass={totalMass}
+                        calculatedAbsoluteAmount={totalRelativeAmount > 0
+                            ? (row.relativeAmount / totalRelativeAmount) * totalMass
+                            : 0}
+                        inputAbsoluteAmount={row.inputAbsoluteAmount || 0}
+                        onAbsoluteAmountChange={(newAmount) => handleAbsoluteAmountChange(row.id, newAmount)}
+                        amountType={amountType}
                         totalRelativeAmount={totalRelativeAmount}
                         onRelativeAmountChange={(newAmount) => updateRowData(row.id, 'relativeAmount', newAmount)}
                         onDelete={() => deleteIngredientRow(row.id)}

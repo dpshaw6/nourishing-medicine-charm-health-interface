@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import mockIngredients from '../data/ingredients.json';
 
-const IngredientRow = ({ rowId, ingredientId, relativeAmount, totalMass, totalRelativeAmount, onRelativeAmountChange, onDelete, onIngredientChange }) => {
+const IngredientRow = ({ rowId, ingredientId, relativeAmount, amountType, calculatedAbsoluteAmount, inputAbsoluteAmount, onRelativeAmountChange, onDelete, onIngredientChange , onAbsoluteAmountChange, absoluteAmount}) => {
     const [overrideMarkup, setOverrideMarkup] = useState(false);
     const [markup, setMarkup] = useState(2.5); // Default markup
+
+    const isRelativeDisabled = amountType === 'absolute';
 
     const ingredient = mockIngredients.find(ing => ing.id === ingredientId);
 
@@ -26,13 +28,14 @@ const IngredientRow = ({ rowId, ingredientId, relativeAmount, totalMass, totalRe
         }
     };
 
-    // Calculate Absolute Amount
-    const absoluteAmount = totalRelativeAmount > 0
-                            ? (relativeAmount / totalRelativeAmount) * totalMass
-                            : 0;
+    const handleAbsoluteAmountChange = (e) => {
+        onAbsoluteAmountChange(Number(e.target.value));
+    };
+
+    const displayedAbsoluteAmount = amountType === 'relative' ? calculatedAbsoluteAmount : inputAbsoluteAmount;
 
     // Calculate Provider Cost
-    const providerCost = absoluteAmount * ingredient.costPerGram;
+    const providerCost = displayedAbsoluteAmount * ingredient.costPerGram;
 
     // Calculate Patient Cost
     const patientCost = providerCost * markup;
@@ -46,12 +49,20 @@ const IngredientRow = ({ rowId, ingredientId, relativeAmount, totalMass, totalRe
                     ))}
                 </select>
             </td>
-            <td>{absoluteAmount.toFixed(1)}g</td>
+            <td>
+                <input 
+                    type="number" 
+                    value={displayedAbsoluteAmount.toFixed(1)}
+                    onChange={handleAbsoluteAmountChange}
+                    disabled={amountType === 'relative'}
+                />
+            </td>
             <td>
                 <input 
                     type="number" 
                     value={relativeAmount} 
                     onChange={handleRelativeAmountChange}
+                    disabled={isRelativeDisabled}
                 />
             </td>
             <td>${ingredient.costPerGram.toFixed(2)}/g</td>
