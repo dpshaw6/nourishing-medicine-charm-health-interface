@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend to Herbal Formula WebApp to talk to Atlas MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dpshaw6/nourishing-medicine-charm-health-interface.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dpshaw6/nourishing-medicine-charm-health-interface/issues"
+  },
+  "homepage": "https://github.com/dpshaw6/nourishing-medicine-charm-health-interface#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "mongodb": "^6.3.0"
+  }
+}
