@@ -4,11 +4,13 @@ import mockFormulas from '../data/formulas.json';
 
 const IngredientRows = ({ selectedFormulaId, totalMass }) => {
     const [rowsData, setRowsData] = useState([]);
-    const [ingredients, setIngredients] = useState([]); // New state for real ingredients
+    const [ingredients, setIngredients] = useState([]);
     const [amountType, setAmountType] = useState('relative');
+    const [totalPatientCost, setTotalPatientCost] = useState(0);
+    const [totalProviderCost, setTotalProviderCost] = useState(0);
 
     useEffect(() => {
-        // Fetch real ingredients from backend
+        // Fetch ingredients from backend
         fetch('http://localhost:3001/api/ingredients')
             .then(response => response.json())
             .then(data => setIngredients(data))
@@ -29,20 +31,42 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
         }
     }, [selectedFormulaId]);
 
-    const addIngredientRow = () => {
-        // Use the first real ingredient's ID if available
-        const firstIngredientId = ingredients.length > 0 ? ingredients[0]._id : null;
+    useEffect(() => {
+        let newTotalProviderCost = 0;
+        let newTotalPatientCost = 0;
+        let totalRelativeAmount = rowsData.reduce((total, row) => total + row.relativeAmount, 0);
 
+        rowsData.forEach(row => {
+            const ingredient = ingredients.find(ing => ing._id === row.ingredientId);
+            if (ingredient) {
+                const effectiveAbsoluteAmount = amountType === 'relative' 
+                    ? (totalRelativeAmount > 0 ? (row.relativeAmount / totalRelativeAmount) * totalMass : 0)
+                    : row.inputAbsoluteAmount;
+                const providerCost = effectiveAbsoluteAmount * ingredient.costPerGram;
+                const patientCost = providerCost * row.markup;
+
+                newTotalProviderCost += providerCost;
+                newTotalPatientCost += patientCost;
+            }
+        });
+
+        setTotalProviderCost(newTotalProviderCost);
+        setTotalPatientCost(newTotalPatientCost);
+    }, [rowsData, ingredients, totalMass, amountType]);
+    
+    const addIngredientRow = () => {
         const newRow = {
             id: `row-${Date.now()}`,
             ingredientId: '', // Set to empty string for placeholder
             relativeAmount: 0,
-            inputAbsoluteAmount: 0 // initialize input absolute amount
+            inputAbsoluteAmount: 0, // initialize input absolute amount
+            markup: 2.5, // Default markup
+            overrideMarkup: false // Default override state
         };
     
         setRowsData([...rowsData, newRow]);
     };
-
+    
     const deleteIngredientRow = (rowId) => {
         setRowsData(rowsData.filter(row => row.id !== rowId));
     };
@@ -53,7 +77,7 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
         );
         setRowsData(updatedRows);
     };
-
+    
     const calculateTotalRelativeAmount = () => {
         return rowsData.reduce((total, row) => total + row.relativeAmount, 0);
     };
@@ -70,36 +94,6 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
         ));
     };
     
-    // Calculate total provider cost and total patient cost
-    const calculateTotals = () => {
-        let totalProviderCost = 0;
-        let totalPatientCost = 0;
-
-        rowsData.forEach(row => {
-            const ingredient = ingredients.find(ing => ing._id === row.ingredientId);
-            
-            // Determine the effective absolute amount based on the current mode
-            let effectiveAbsoluteAmount;
-            if (amountType === 'relative') {
-                effectiveAbsoluteAmount = totalRelativeAmount > 0
-                                            ? (row.relativeAmount / totalRelativeAmount) * totalMass
-                                            : 0;
-            } else {
-                effectiveAbsoluteAmount = row.inputAbsoluteAmount;
-            }
-
-            const providerCost = effectiveAbsoluteAmount * (ingredient ? ingredient.costPerGram : 0);
-            const patientCost = providerCost * (row.overrideMarkup ? row.markup : 2.5);
-
-            totalProviderCost += providerCost;
-            totalPatientCost += patientCost;
-        });
-
-        return { totalProviderCost, totalPatientCost };
-    };
-
-    const { totalProviderCost, totalPatientCost } = calculateTotals();
-
     return (
         <table style={{ width: '100%', textAlign: 'center' }}>
             <thead>
@@ -145,7 +139,9 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
                         onDelete={() => deleteIngredientRow(row.id)}
                         onIngredientChange={(newIngredientId) => updateRowData(row.id, 'ingredientId', newIngredientId)}
                         ingredients={ingredients}
-                    />
+                        overrideMarkup={row.overrideMarkup}
+                        markup={row.markup}
+                        onMarkupChange={updateRowData}                                        />
                 ))}
                 <tr>
                     <td colSpan={5}></td>

@@ -11,14 +11,13 @@ const IngredientRow = ({
     onDelete, 
     onIngredientChange, 
     onAbsoluteAmountChange, 
-    ingredients  
+    ingredients,
+    overrideMarkup,
+    markup,
+    onMarkupChange
 }) => {
-    const [overrideMarkup, setOverrideMarkup] = useState(false);
-    const [markup, setMarkup] = useState(2.5); // Default markup
-
     const isRelativeDisabled = amountType === 'absolute';
 
-    //const ingredient = mockIngredients.find(ing => ing.id === ingredientId);
     // Find the selected ingredient from the fetched ingredients
     const ingredient = ingredients.find(ing => ing._id === ingredientId);
 
@@ -34,14 +33,12 @@ const IngredientRow = ({
     };
 
     const handleMarkupChange = (e) => {
-        setMarkup(Number(e.target.value));
+        const newMarkup = Number(e.target.value);
+        onMarkupChange(rowId, 'markup', newMarkup);
     };
 
     const handleOverrideChange = () => {
-        setOverrideMarkup(!overrideMarkup);
-        if (!overrideMarkup) {
-            setMarkup(2.5); // Reset to default if override is unchecked
-        }
+        onMarkupChange(rowId, 'overrideMarkup', !overrideMarkup);
     };
 
     const handleAbsoluteAmountChange = (e) => {
@@ -86,11 +83,11 @@ const IngredientRow = ({
                 {ingredient ? `$${ingredient.costPerGram.toFixed(2)}/g` : 'N/A'}
             </td>
             <td>
-                <input 
-                    type="checkbox" 
-                    checked={overrideMarkup}
-                    onChange={handleOverrideChange}
-                />
+            <input 
+                type="checkbox" 
+                checked={overrideMarkup}
+                onChange={handleOverrideChange}
+            />
             </td>
             <td>
                 <input 
