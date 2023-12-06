@@ -1,28 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import IngredientRow from './IngredientRow';
-import mockIngredients from '../data/ingredients.json';
 import mockFormulas from '../data/formulas.json';
 
 const IngredientRows = ({ selectedFormulaId, totalMass }) => {
     const [rowsData, setRowsData] = useState([]);
-    const [amountType, setAmountType] = useState('relative'); // 'relative' or 'absolute'
+    const [ingredients, setIngredients] = useState([]); // New state for real ingredients
+    const [amountType, setAmountType] = useState('relative');
 
     useEffect(() => {
+        // Fetch real ingredients from backend
+        fetch('http://localhost:3001/api/ingredients')
+            .then(response => response.json())
+            .then(data => setIngredients(data))
+            .catch(error => console.error('Error fetching ingredients:', error));
+    
         if (selectedFormulaId) {
             const formula = mockFormulas.find(f => f.id === selectedFormulaId);
-            const ingredientIds = formula ? Object.keys(formula.ingredientIds) : [];
-            setRowsData(ingredientIds.map(id => ({ id: `row-${id}`, ingredientId: id, relativeAmount: 0 })));
+            // Assuming ingredientIds in the formula is an array of ingredient IDs
+            const ingredientIds = formula ? formula.ingredientIds : [];
+            setRowsData(ingredientIds.map(ingredientId => ({
+                id: `row-${ingredientId}`,
+                ingredientId: ingredientId,
+                relativeAmount: 0,
+                inputAbsoluteAmount: 0 // initialize input absolute amount
+            })));
         } else {
             setRowsData([]);
         }
     }, [selectedFormulaId]);
 
     const addIngredientRow = () => {
+        // Use the first real ingredient's ID if available
+        const firstIngredientId = ingredients.length > 0 ? ingredients[0]._id : null;
+
         const newRow = {
             id: `row-${Date.now()}`,
-            ingredientId: mockIngredients[0].id,
-            relativeAmount: 0
+            ingredientId: '', // Set to empty string for placeholder
+            relativeAmount: 0,
+            inputAbsoluteAmount: 0 // initialize input absolute amount
         };
+    
         setRowsData([...rowsData, newRow]);
     };
 
@@ -59,7 +76,7 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
         let totalPatientCost = 0;
 
         rowsData.forEach(row => {
-            const ingredient = mockIngredients.find(ing => ing.id === row.ingredientId);
+            const ingredient = ingredients.find(ing => ing._id === row.ingredientId);
             
             // Determine the effective absolute amount based on the current mode
             let effectiveAbsoluteAmount;
@@ -127,6 +144,7 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
                         onRelativeAmountChange={(newAmount) => updateRowData(row.id, 'relativeAmount', newAmount)}
                         onDelete={() => deleteIngredientRow(row.id)}
                         onIngredientChange={(newIngredientId) => updateRowData(row.id, 'ingredientId', newIngredientId)}
+                        ingredients={ingredients}
                     />
                 ))}
                 <tr>

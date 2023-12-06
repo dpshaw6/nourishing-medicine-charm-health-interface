@@ -1,13 +1,29 @@
 import React, { useState } from 'react';
-import mockIngredients from '../data/ingredients.json';
 
-const IngredientRow = ({ rowId, ingredientId, relativeAmount, amountType, calculatedAbsoluteAmount, inputAbsoluteAmount, onRelativeAmountChange, onDelete, onIngredientChange , onAbsoluteAmountChange, absoluteAmount}) => {
+const IngredientRow = ({ 
+    rowId, 
+    ingredientId, 
+    relativeAmount, 
+    amountType, 
+    calculatedAbsoluteAmount, 
+    inputAbsoluteAmount, 
+    onRelativeAmountChange, 
+    onDelete, 
+    onIngredientChange, 
+    onAbsoluteAmountChange, 
+    ingredients  
+}) => {
     const [overrideMarkup, setOverrideMarkup] = useState(false);
     const [markup, setMarkup] = useState(2.5); // Default markup
 
     const isRelativeDisabled = amountType === 'absolute';
 
-    const ingredient = mockIngredients.find(ing => ing.id === ingredientId);
+    //const ingredient = mockIngredients.find(ing => ing.id === ingredientId);
+    // Find the selected ingredient from the fetched ingredients
+    const ingredient = ingredients.find(ing => ing._id === ingredientId);
+
+    // Check if a valid ingredient is selected
+    const isValidIngredient = ingredient && ingredientId !== '';
 
     const handleRelativeAmountChange = (e) => {
         onRelativeAmountChange(Number(e.target.value));
@@ -35,19 +51,20 @@ const IngredientRow = ({ rowId, ingredientId, relativeAmount, amountType, calcul
     const displayedAbsoluteAmount = amountType === 'relative' ? calculatedAbsoluteAmount : inputAbsoluteAmount;
 
     // Calculate Provider Cost
-    const providerCost = displayedAbsoluteAmount * ingredient.costPerGram;
+    const providerCost = isValidIngredient ? displayedAbsoluteAmount * ingredient.costPerGram : 0;
 
     // Calculate Patient Cost
-    const patientCost = providerCost * markup;
+    const patientCost = isValidIngredient ? providerCost * markup : 0;
 
     return (
         <tr>
             <td>
                 <select value={ingredientId} onChange={handleIngredientSelection}>
-                    {mockIngredients.map(ing => (
-                        <option key={ing.id} value={ing.id}>{ing.name}</option>
-                    ))}
-                </select>
+                <option value="" disabled>Choose Ingredient...</option>
+                {ingredients.map(ing => (
+                    <option key={ing._id} value={ing._id}>{ing.name}</option>
+                ))}
+            </select>
             </td>
             <td>
                 <input 
@@ -65,7 +82,9 @@ const IngredientRow = ({ rowId, ingredientId, relativeAmount, amountType, calcul
                     disabled={isRelativeDisabled}
                 />
             </td>
-            <td>${ingredient.costPerGram.toFixed(2)}/g</td>
+            <td>
+                {ingredient ? `$${ingredient.costPerGram.toFixed(2)}/g` : 'N/A'}
+            </td>
             <td>
                 <input 
                     type="checkbox" 

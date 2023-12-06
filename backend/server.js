@@ -1,23 +1,14 @@
-const { MongoClient } = require("mongodb");
-require('dotenv').config();
+const cors = require('cors');
+const express = require('express');
+const ingredientsRoutes = require('./routes/ingredientsRoutes');
 
-async function run() {
-    const uri = process.env.MONGODB_URI;
-    const client = new MongoClient(uri);
+const app = express();
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json());
 
-    try {
-        await client.connect();
-        console.log("Connected to MongoDB");
+app.use('/api', ingredientsRoutes);
 
-        const db = client.db("NourishingMedicineHerbalFormulaDB"); // Replace with your actual database name
-        const collection = db.collection("Ingredients"); // Replace with your actual collection name
-
-        // Add further operations here, like querying the database
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-    } finally {
-        await client.close();
-    }
-}
-
-run().catch(console.error);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
