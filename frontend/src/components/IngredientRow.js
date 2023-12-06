@@ -63,12 +63,13 @@ const IngredientRow = ({
                 ))}
             </select>
             </td>
-            <td>
+            <td style={{ backgroundColor: '#FFFF99' }}>
                 <input 
                     type="number" 
                     value={displayedAbsoluteAmount.toFixed(1)}
                     onChange={handleAbsoluteAmountChange}
                     disabled={amountType === 'relative'}
+                    style={{ fontWeight: 'bold' }}
                 />
             </td>
             <td>
