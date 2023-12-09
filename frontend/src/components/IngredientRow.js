@@ -14,7 +14,8 @@ const IngredientRow = ({
     ingredients,
     overrideMarkup,
     markup,
-    onMarkupChange
+    onMarkupChange,
+    onEditIngredient
 }) => {
     const isRelativeDisabled = amountType === 'absolute';
 
@@ -57,11 +58,14 @@ const IngredientRow = ({
         <tr>
             <td>
                 <select value={ingredientId} onChange={handleIngredientSelection}>
-                <option value="" disabled>Choose Ingredient...</option>
-                {ingredients.map(ing => (
-                    <option key={ing._id} value={ing._id}>{ing.name}</option>
-                ))}
-            </select>
+                    <option value="" disabled>Choose Ingredient...</option>
+                    {ingredients.map(ing => (
+                        <option key={ing._id} value={ing._id}>{ing.name}</option>
+                    ))}
+                </select>
+                <button onClick={() => onEditIngredient(rowId)}>
+                    {ingredientId ? 'Edit' : 'Add New'}
+                </button>
             </td>
             <td style={{ backgroundColor: '#FFFF99' }}>
                 <input 

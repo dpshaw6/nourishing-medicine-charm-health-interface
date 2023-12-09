@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import IngredientRow from './IngredientRow';
+import IngredientPopup from './IngredientPopup';
 import mockFormulas from '../data/formulas.json';
 
 const IngredientRows = ({ selectedFormulaId, totalMass }) => {
@@ -8,7 +9,9 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
     const [amountType, setAmountType] = useState('relative');
     const [totalPatientCost, setTotalPatientCost] = useState(0);
     const [totalProviderCost, setTotalProviderCost] = useState(0);
-
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [currentIngredient, setCurrentIngredient] = useState(null);
+    
     useEffect(() => {
         // Fetch ingredients from backend
         fetch('http://localhost:3001/api/ingredients')
@@ -54,6 +57,13 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
         setTotalPatientCost(newTotalPatientCost);
     }, [rowsData, ingredients, totalMass, amountType]);
     
+    const onEditIngredient = (rowId) => {
+        const row = rowsData.find(r => r.id === rowId);
+        const ingredientToEdit = ingredients.find(ing => ing._id === row.ingredientId);
+        setCurrentIngredient(ingredientToEdit || null); // If no ingredient is selected, set to null
+        setIsPopupOpen(true);
+    };
+
     const addIngredientRow = () => {
         const newRow = {
             id: `row-${Date.now()}`,
@@ -93,67 +103,96 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
             row.id === rowId ? { ...row, inputAbsoluteAmount: newAmount } : row
         ));
     };
+
+    const handleIngredientSave = (ingredientData) => {
+        if (currentIngredient) {
+            // Update existing ingredient
+            // Send a request to your backend to update the ingredient
+            // Or update the state if you're managing ingredients locally
+        } else {
+            // Add new ingredient
+            // Send a request to your backend to add the new ingredient
+            // Or update the state if you're managing ingredients locally
+        }
     
+        // After saving, close the pop-up and refresh the ingredients list
+        setIsPopupOpen(false);
+        // Refresh ingredients list logic here
+    };    
+
     return (
-        <table style={{ width: '100%', textAlign: 'center' }}>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>
-                        <input 
-                            type="radio" 
-                            value="absolute" 
-                            checked={amountType === 'absolute'}
-                            onChange={handleAmountTypeChange}
-                        />Absolute Amount</th>
-                    <th>
-                        <input 
-                            type="radio" 
-                            value="relative" 
-                            checked={amountType === 'relative'}
-                            onChange={handleAmountTypeChange}
-                        />Ingredient Ratio</th>
-                    <th>Cost/Gram</th>
-                    <th>Override</th>
-                    <th>Markup</th>
-                    <th>Provider Cost</th>
-                    <th>Patient Cost</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {rowsData.map(row => (
-                    <IngredientRow 
-                        key={row.id}
-                        rowId={row.id}
-                        ingredientId={row.ingredientId}
-                        relativeAmount={row.relativeAmount}
-                        calculatedAbsoluteAmount={totalRelativeAmount > 0
-                            ? (row.relativeAmount / totalRelativeAmount) * totalMass
-                            : 0}
-                        inputAbsoluteAmount={row.inputAbsoluteAmount || 0}
-                        onAbsoluteAmountChange={(newAmount) => handleAbsoluteAmountChange(row.id, newAmount)}
-                        amountType={amountType}
-                        totalRelativeAmount={totalRelativeAmount}
-                        onRelativeAmountChange={(newAmount) => updateRowData(row.id, 'relativeAmount', newAmount)}
-                        onDelete={() => deleteIngredientRow(row.id)}
-                        onIngredientChange={(newIngredientId) => updateRowData(row.id, 'ingredientId', newIngredientId)}
-                        ingredients={ingredients}
-                        overrideMarkup={row.overrideMarkup}
-                        markup={row.markup}
-                        onMarkupChange={updateRowData}                                        />
-                ))}
-                <tr>
-                    <td colSpan={5}></td>
-                    <td>Total</td>
-                    <td>${totalProviderCost.toFixed(2)}</td>
-                    <td>${totalPatientCost.toFixed(2)}</td>
-                    <td>
-                        <button onClick={addIngredientRow}>Add Ingredient</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>    );
+        <div>
+            <table style={{ width: '100%', textAlign: 'center' }}>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>
+                            <input 
+                                type="radio" 
+                                value="absolute" 
+                                checked={amountType === 'absolute'}
+                                onChange={handleAmountTypeChange}
+                            />Absolute Amount</th>
+                        <th>
+                            <input 
+                                type="radio" 
+                                value="relative" 
+                                checked={amountType === 'relative'}
+                                onChange={handleAmountTypeChange}
+                            />Ingredient Ratio</th>
+                        <th>Cost/Gram</th>
+                        <th>Override</th>
+                        <th>Markup</th>
+                        <th>Provider Cost</th>
+                        <th>Patient Cost</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rowsData.map(row => (
+                        <IngredientRow 
+                            key={row.id}
+                            rowId={row.id}
+                            ingredientId={row.ingredientId}
+                            relativeAmount={row.relativeAmount}
+                            calculatedAbsoluteAmount={totalRelativeAmount > 0
+                                ? (row.relativeAmount / totalRelativeAmount) * totalMass
+                                : 0}
+                            inputAbsoluteAmount={row.inputAbsoluteAmount || 0}
+                            onAbsoluteAmountChange={(newAmount) => handleAbsoluteAmountChange(row.id, newAmount)}
+                            amountType={amountType}
+                            totalRelativeAmount={totalRelativeAmount}
+                            onRelativeAmountChange={(newAmount) => updateRowData(row.id, 'relativeAmount', newAmount)}
+                            onDelete={() => deleteIngredientRow(row.id)}
+                            onIngredientChange={(newIngredientId) => updateRowData(row.id, 'ingredientId', newIngredientId)}
+                            ingredients={ingredients}
+                            overrideMarkup={row.overrideMarkup}
+                            markup={row.markup}
+                            onMarkupChange={updateRowData}
+                            onEditIngredient={onEditIngredient}
+                        />
+                    ))}
+                    <tr>
+                        <td colSpan={5}></td>
+                        <td>Total</td>
+                        <td>${totalProviderCost.toFixed(2)}</td>
+                        <td>${totalPatientCost.toFixed(2)}</td>
+                        <td>
+                            <button onClick={addIngredientRow}>Add Ingredient</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            {isPopupOpen && (
+                <IngredientPopup 
+                    isOpen={isPopupOpen}
+                    onClose={() => setIsPopupOpen(false)}
+                    onSave={handleIngredientSave}
+                    ingredient={currentIngredient}
+                />
+            )}
+        </div>
+    );
 };
 
 export default IngredientRows;
