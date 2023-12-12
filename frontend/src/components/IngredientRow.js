@@ -46,6 +46,11 @@ const IngredientRow = ({
         onAbsoluteAmountChange(Number(e.target.value));
     };
 
+    const sortedIngredients = [...ingredients].sort((a, b) => {
+        // Assuming 'name' is the property to sort by
+        return a.name.localeCompare(b.name);
+    });    
+
     const displayedAbsoluteAmount = amountType === 'relative' ? calculatedAbsoluteAmount : inputAbsoluteAmount;
 
     // Calculate Provider Cost
@@ -59,8 +64,10 @@ const IngredientRow = ({
             <td>
                 <select value={ingredientId} onChange={handleIngredientSelection}>
                     <option value="" disabled>Choose Ingredient...</option>
-                    {ingredients.map(ing => (
-                        <option key={ing._id} value={ing._id}>{ing.name}</option>
+                    {sortedIngredients.map(ingredient => (
+                        <option key={ingredient._id} value={ingredient._id}>
+                            {ingredient.name}
+                        </option>
                     ))}
                 </select>
                 <button onClick={() => onEditIngredient(rowId)}>
