@@ -12,10 +12,10 @@ router.post('/ingredients', async (req, res) => {
     try {
         await client.connect();
         const collection = client.db(dbName).collection(collectionName);
-        await collection.insertOne(req.body);
-        res.status(201).send("Ingredient added");
+        const result = await collection.insertOne(req.body);
+        res.status(201).json({ message: "Ingredient added", id: result.insertedId });
     } catch (error) {
-        res.status(500).send("Error adding ingredient: " + error.message);
+        res.status(500).json({ message: "Error adding ingredient: " + error.message });
     } finally {
         await client.close();
     }

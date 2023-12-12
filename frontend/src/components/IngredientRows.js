@@ -64,6 +64,16 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
         setIsPopupOpen(true);
     };
 
+    const fetchIngredients = async () => {
+        try {
+            const response = await fetch('http://localhost:3001/api/ingredients');
+            const data = await response.json();
+            setIngredients(data);
+        } catch (error) {
+            console.error('Error fetching ingredients:', error);
+        }
+    };
+    
     const addIngredientRow = () => {
         const newRow = {
             id: `row-${Date.now()}`,
@@ -104,20 +114,41 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
         ));
     };
 
-    const handleIngredientSave = (ingredientData) => {
+    const handleIngredientSave = async (ingredientData) => {
         if (currentIngredient) {
-            // Update existing ingredient
-            // Send a request to your backend to update the ingredient
-            // Or update the state if you're managing ingredients locally
+            const response = await fetch(`http://localhost:3001/api/ingredients/${currentIngredient._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ingredientData),
+            });
         } else {
-            // Add new ingredient
-            // Send a request to your backend to add the new ingredient
-            // Or update the state if you're managing ingredients locally
+            try {
+                const response = await fetch('http://localhost:3001/api/ingredients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(ingredientData),
+                });
+    
+                if (response.ok) {
+                    const newIngredient = await response.json();
+                    setIngredients([...ingredients, newIngredient]);
+                } else {
+                    // Handle errors
+                    console.error('Failed to add ingredient');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
     
         // After saving, close the pop-up and refresh the ingredients list
         setIsPopupOpen(false);
         // Refresh ingredients list logic here
+        fetchIngredients();
     };    
 
     return (

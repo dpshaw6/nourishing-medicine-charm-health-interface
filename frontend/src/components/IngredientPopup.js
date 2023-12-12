@@ -13,40 +13,33 @@ const IngredientPopup = ({ isOpen, onClose, onSave, ingredient }) => {
     }, [ingredient]);
 
     const handleSave = () => {
-        onSave({ name, costPerGram });
-        onClose();
+        onSave({
+            name: name,
+            costPerGram: parseFloat(costPerGram) // Ensure costPerGram is a number
+        });
+        onClose(); // Close the popup
     };
-
+        
     if (!isOpen) return null;
 
     return (
         <div className="popup-container">
             <div className="popup">
                 <h2>{ingredient ? 'Edit Ingredient' : 'Add New Ingredient'}</h2>
-                <tr>
-                    <td>
-                        <input 
-                            type="text" 
-                            value={name} 
-                            onChange={(e) => setName(e.target.value)} 
-                            placeholder="Ingredient Name"
-                        />
-                    </td>
-                    <td>
-                        <input 
-                            type="number" 
-                            value={costPerGram} 
-                            onChange={(e) => setCostPerGram(e.target.value)} 
-                            placeholder="Cost per Gram"
-                        />
-                    </td>
-                    <td>
-                        <button onClick={handleSave}>Save</button>
-                    </td>
-                    <td>
-                        <button onClick={onClose}>Cancel</button>
-                    </td>
-                </tr>
+                <input 
+                    type="text" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    placeholder="Ingredient Name"
+                />
+                <input 
+                    type="number" 
+                    value={costPerGram} 
+                    onChange={(e) => setCostPerGram(e.target.value)} 
+                    placeholder="Cost per Gram"
+                />
+                <button onClick={handleSave}>Save</button>
+                <button onClick={onClose}>Cancel</button>
             </div>
         </div>
     );
