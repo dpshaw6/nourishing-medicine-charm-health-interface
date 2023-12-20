@@ -149,8 +149,35 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
         setIsPopupOpen(false);
         // Refresh ingredients list logic here
         fetchIngredients();
-    };    
+    }; 
 
+    const copyFormulaToClipboard = () => {
+        let formulaData = 'Name\tAmount (g)\n'; // Header
+    
+        rowsData.forEach(row => {
+            const ingredient = ingredients.find(ing => ing._id === row.ingredientId);
+            if (ingredient) {
+                // Calculate the effective absolute amount
+                let absoluteAmount = 0;
+                if (amountType === 'relative' && totalRelativeAmount > 0) {
+                    absoluteAmount = (row.relativeAmount / totalRelativeAmount) * totalMass;
+                } else if (amountType === 'absolute') {
+                    absoluteAmount = row.inputAbsoluteAmount;
+                }
+    
+                formulaData += `${ingredient.name}\t${absoluteAmount.toFixed(2)}\n`;
+            }
+        });
+    
+        navigator.clipboard.writeText(formulaData)
+            .then(() => {
+                console.log('Formula copied to clipboard');
+            })
+            .catch(err => {
+                console.error('Error copying formula to clipboard: ', err);
+            });
+    };
+            
     return (
         <div>
             <table style={{ width: '100%', textAlign: 'center' }}>
@@ -211,6 +238,9 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
                         <td>
                             <button onClick={addIngredientRow}>Add Ingredient</button>
                         </td>
+                    </tr>
+                    <tr>
+                        <button onClick={copyFormulaToClipboard}>Copy Formula</button>
                     </tr>
                 </tbody>
             </table>

@@ -37,6 +37,8 @@ The application should now be running on your local server.
 
 ## Planned and Requested Improvements
 - **Copy and Paste of Formulas**: Automatically copy formulas to clipboard.
+- **Formula Names**: Enable user naming of formulas.
+- **Delete Ingredients**: Create page dedicated to display/add/edit/delete ingredients.
 - **Database Integration**: Implementing a backend database to store and retrieve formulas, ingredients, and patient data.
 - **User Authentication**: Adding user authentication to ensure data privacy and security.
 - **Reporting Features**: Developing reporting capabilities to track formula usage, popular ingredients, and cost analysis.
