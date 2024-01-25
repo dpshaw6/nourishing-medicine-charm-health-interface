@@ -47,9 +47,14 @@ const IngredientRow = ({
     };
 
     const sortedIngredients = [...ingredients].sort((a, b) => {
+        // Check for undefined or null values and handle them appropriately
+        if (!a.name && !b.name) return 0; // Both names are undefined/null, consider them equal
+        if (!a.name) return -1; // Only a's name is undefined/null, consider a as smaller
+        if (!b.name) return 1;  // Only b's name is undefined/null, consider b as smaller
+    
         // Assuming 'name' is the property to sort by
         return a.name.localeCompare(b.name);
-    });    
+    });
 
     const displayedAbsoluteAmount = amountType === 'relative' ? calculatedAbsoluteAmount : inputAbsoluteAmount;
 
