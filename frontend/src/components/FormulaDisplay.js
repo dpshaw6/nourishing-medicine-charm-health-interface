@@ -6,7 +6,6 @@ const FormulaDisplay = ({ selectedFormulaId }) => {
 
     return (
         <div>
-            <label>Formula: </label>
             <span>{formula ? formula.name : 'No formula selected'}</span>
         </div>
     );

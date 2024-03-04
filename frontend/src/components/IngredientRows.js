@@ -21,18 +21,18 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
     
         if (selectedFormulaId) {
             const formula = mockFormulas.find(f => f.id === selectedFormulaId);
-            // Assuming ingredientIds in the formula is an array of ingredient IDs
-            const ingredientIds = formula ? formula.ingredientIds : [];
+            // Ensure ingredientIds is an array before proceeding
+            const ingredientIds = Array.isArray(formula?.ingredientIds) ? formula.ingredientIds : [];
             setRowsData(ingredientIds.map(ingredientId => ({
                 id: `row-${ingredientId}`,
                 ingredientId: ingredientId,
                 relativeAmount: 0,
-                inputAbsoluteAmount: 0 // initialize input absolute amount
+                inputAbsoluteAmount: 0 // Initialize input absolute amount
             })));
         } else {
             setRowsData([]);
         }
-    }, [selectedFormulaId]);
+    }, [selectedFormulaId]);    
 
     useEffect(() => {
         let newTotalProviderCost = 0;

@@ -8,7 +8,7 @@ const client = new MongoClient(uri);
 const dbName = "NourishingMedicineHerbalFormulaDB";
 const collectionName = "Ingredients";
 
-router.post('/ingredients', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         await client.connect();
         const collection = client.db(dbName).collection(collectionName);
@@ -21,7 +21,7 @@ router.post('/ingredients', async (req, res) => {
     }
 });
 
-router.get('/ingredients', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         await client.connect();
         const collection = client.db(dbName).collection(collectionName);
@@ -34,7 +34,7 @@ router.get('/ingredients', async (req, res) => {
     }
 });
 
-router.put('/ingredients/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
     const id = req.params.id;
     try {
         await client.connect();
@@ -48,7 +48,7 @@ router.put('/ingredients/:id', async (req, res) => {
     }
 });
 
-router.delete('/ingredients/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     const id = req.params.id;
     try {
         await client.connect();

@@ -36,7 +36,7 @@ To use this application, follow these steps:
 The application should now be running on your local server.
 
 ## Planned and Requested Improvements
-- **Copy and Paste of Formulas**: Automatically copy formulas to clipboard.
+- **List Conditions for each formula and date created**: Automatically copy date and conditions to clipboard (with formula data).
 - **Formula Names**: Enable user naming of formulas.
 - **Delete Ingredients**: Create page dedicated to display/add/edit/delete ingredients.
 - **Database Integration**: Implementing a backend database to store and retrieve formulas, ingredients, and patient data.

@@ -12,7 +12,6 @@ const PatientSelect = ({ onPatientSelect }) => {
 
     return (
         <div>
-            <label>Patient: </label>
             <select
                 value={selectedPatient}
                 onChange={e => setSelectedPatient(e.target.value)}

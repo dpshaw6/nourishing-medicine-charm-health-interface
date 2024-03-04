@@ -44,16 +44,33 @@ const App = () => {
 
     return (
         <div className="app-container">
+            <table style={{ width: '100%', textAlign: 'center' }}>
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Condition(s)</th>
+                        <th>Formula</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <PatientSelect onPatientSelect={handlePatientSelect} />
+                        </td>
+                        <td>
+                            <ConditionSelect style={{ textAlign: 'center' }}
+                                selectedPatientId={selectedPatientId}
+                                onConditionSelect={handleConditionSelect} 
+                            />
+                        </td>
+                        <td>
+                            <FormulaDisplay selectedFormulaId={selectedFormulaId} />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <div className="row">
-                <PatientSelect onPatientSelect={handlePatientSelect} />
-                <ConditionSelect 
-                    selectedPatientId={selectedPatientId} // Corrected prop name
-                    onConditionSelect={handleConditionSelect} 
-                />
-                <FormulaDisplay selectedFormulaId={selectedFormulaId} />
-            </div>
-            <div className="row">
-            <GlobalFormulaInfo totalMass={totalMass} setTotalMass={setTotalMass} />
+                <GlobalFormulaInfo totalMass={totalMass} setTotalMass={setTotalMass} />
             </div>
             <h3 style={{ textAlign: 'center' }}>Formula</h3>
             <IngredientRows selectedFormulaId={selectedFormulaId} totalMass={totalMass} />
