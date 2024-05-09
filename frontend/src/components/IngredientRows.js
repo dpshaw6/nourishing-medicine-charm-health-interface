@@ -80,7 +80,7 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
             ingredientId: '', // Set to empty string for placeholder
             relativeAmount: 0,
             inputAbsoluteAmount: 0, // initialize input absolute amount
-            markup: 2.5, // Default markup
+            markup: 3.0, // Default markup
             overrideMarkup: false // Default override state
         };
     
