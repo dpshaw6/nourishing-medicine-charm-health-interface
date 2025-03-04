@@ -3,7 +3,7 @@ import IngredientRow from './IngredientRow';
 import IngredientPopup from './IngredientPopup';
 import mockFormulas from '../data/formulas.json';
 
-const IngredientRows = ({ selectedFormulaId, totalMass }) => {
+const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionName }) => {
     const [rowsData, setRowsData] = useState([]);
     const [ingredients, setIngredients] = useState([]);
     const [amountType, setAmountType] = useState('relative');
@@ -11,6 +11,8 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
     const [totalProviderCost, setTotalProviderCost] = useState(0);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [currentIngredient, setCurrentIngredient] = useState(null);
+    const [formulaName, setFormulaName] = useState(""); // Initialize with an empty string
+    const [dosage, setDosage] = useState("3 scoops twice a day"); // Default dosage
     
     useEffect(() => {
         // Fetch ingredients from backend
@@ -152,12 +154,22 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
     }; 
 
     const copyFormulaToClipboard = () => {
-        let formulaData = 'Name\tAmount (g)\n'; // Header
+        const formulaTitle = formulaName?.trim() || "Untitled Formula";
+        const dosageInstructions = dosage?.trim() || "3 scoops twice a day";
+        const currentDate = new Date().toLocaleDateString();
+
+        let formulaData = `Patient: ${patientName || "Unknown"}\n`;
+        formulaData += `Date: ${currentDate}\n`;
+        formulaData += `Condition: ${conditionName || "Unknown"}\n`;
+        formulaData += `Formula: ${formulaTitle}\n`;
+        formulaData += `Dosage: ${dosageInstructions}\n\n`;
+        formulaData += "Name\tAmount (g)\tPercentage (%)\n";
     
+        // Process ingredients
         rowsData.forEach(row => {
             const ingredient = ingredients.find(ing => ing._id === row.ingredientId);
             if (ingredient) {
-                // Calculate the effective absolute amount
+                // Calculate absolute amount
                 let absoluteAmount = 0;
                 if (amountType === 'relative' && totalRelativeAmount > 0) {
                     absoluteAmount = (row.relativeAmount / totalRelativeAmount) * totalMass;
@@ -165,21 +177,55 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
                     absoluteAmount = row.inputAbsoluteAmount;
                 }
     
-                formulaData += `${ingredient.name}\t${absoluteAmount.toFixed(2)}\n`;
+                // Calculate percentage
+                const percentage = totalMass > 0 ? (absoluteAmount / totalMass) * 100 : 0;
+    
+                // Append to output
+                formulaData += `${ingredient.name}\t${absoluteAmount.toFixed(2)}\t${percentage.toFixed(2)}%\n`;
             }
         });
     
+        // Copy to clipboard
         navigator.clipboard.writeText(formulaData)
             .then(() => {
-                console.log('Formula copied to clipboard');
+                console.log('Formula copied to clipboard successfully');
             })
             .catch(err => {
-                console.error('Error copying formula to clipboard: ', err);
+                console.error('Error copying formula to clipboard:', err);
             });
     };
-            
+        
     return (
         <div>
+            {/* Formula Name Input */}
+            <div style={{ marginBottom: '10px', textAlign: 'center' }}>
+                <label>
+                    Formula Name:&nbsp;
+                    <input 
+                        type="text" 
+                        value={formulaName} 
+                        onChange={(e) => setFormulaName(e.target.value)} 
+                        placeholder="Enter formula name"
+                        style={{ width: '250px', padding: '5px' }}
+                    />
+                </label>
+            </div>
+    
+            {/* Dosage Instructions Input */}
+            <div style={{ marginBottom: '10px', textAlign: 'center' }}>
+                <label>
+                    Dosage Instructions:&nbsp;
+                    <input 
+                        type="text" 
+                        value={dosage} 
+                        onChange={(e) => setDosage(e.target.value)} 
+                        placeholder="e.g., 3 scoops twice a day"
+                        style={{ width: '250px', padding: '5px' }}
+                    />
+                </label>
+            </div>
+    
+            {/* Ingredient Table */}
             <table style={{ width: '100%', textAlign: 'center' }}>
                 <thead>
                     <tr>
@@ -239,11 +285,17 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
                             <button onClick={addIngredientRow}>Add Ingredient</button>
                         </td>
                     </tr>
-                    <tr>
-                        <button onClick={copyFormulaToClipboard}>Copy Formula</button>
-                    </tr>
                 </tbody>
             </table>
+    
+            {/* Copy Formula Button */}
+            <div style={{ textAlign: 'center', marginTop: '15px' }}>
+                <button onClick={copyFormulaToClipboard} style={{ padding: '10px 15px', fontSize: '16px' }}>
+                    Copy Formula
+                </button>
+            </div>
+    
+            {/* Ingredient Popup for Adding/Editing */}
             {isPopupOpen && (
                 <IngredientPopup 
                     isOpen={isPopupOpen}
@@ -254,6 +306,7 @@ const IngredientRows = ({ selectedFormulaId, totalMass }) => {
             )}
         </div>
     );
+    
 };
 
 export default IngredientRows;
