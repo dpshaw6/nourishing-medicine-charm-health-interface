@@ -153,6 +153,14 @@ const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionNa
         fetchIngredients();
     }; 
 
+    const handleClear = () => {
+        setRowsData([]);
+        setFormulaName('');
+        setDosage('3 scoops twice a day');
+        setTotalPatientCost(0);
+        setTotalProviderCost(0);
+    };    
+
     const copyFormulaToClipboard = () => {
         const formulaTitle = formulaName?.trim() || "Untitled Formula";
         const dosageInstructions = dosage?.trim() || "3 scoops twice a day";
@@ -289,13 +297,15 @@ const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionNa
                 </tbody>
             </table>
     
-            {/* Copy Formula Button */}
-            <div style={{ textAlign: 'center', marginTop: '15px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '80px', marginTop: '15px' }}>
                 <button onClick={copyFormulaToClipboard} style={{ padding: '10px 15px', fontSize: '16px' }}>
                     Copy Formula
                 </button>
+                <button onClick={handleClear} style={{ padding: '10px 15px', fontSize: '16px', backgroundColor: '#f44336', color: 'white' }}>
+                    Clear
+                </button>
             </div>
-    
+
             {/* Ingredient Popup for Adding/Editing */}
             {isPopupOpen && (
                 <IngredientPopup 
