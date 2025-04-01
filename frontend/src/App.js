@@ -10,6 +10,7 @@ const App = () => {
     const [conditionName, setConditionName] = useState(''); // Text field for condition name
     const [selectedFormulaId, setSelectedFormulaId] = useState('');
     const [totalMass, setTotalMass] = useState(126); // Default total mass
+    const [numDays, setNumDays] = useState(14);
 
     return (
         <div className="app-container">
@@ -48,7 +49,12 @@ const App = () => {
                 </tbody>
             </table>
             <div className="row">
-                <GlobalFormulaInfo totalMass={totalMass} setTotalMass={setTotalMass} />
+            <GlobalFormulaInfo 
+                totalMass={totalMass} 
+                setTotalMass={setTotalMass}
+                numDays={numDays}
+                setNumDays={setNumDays}
+                />
             </div>
             <h3 style={{ textAlign: 'center' }}>Formula</h3>
             <IngredientRows 
@@ -56,6 +62,7 @@ const App = () => {
                 totalMass={totalMass} 
                 patientName={patientName} 
                 conditionName={conditionName} 
+                numDays={numDays}
             />
             <ActionButtons />
         </div>

@@ -3,7 +3,7 @@ import IngredientRow from './IngredientRow';
 import IngredientPopup from './IngredientPopup';
 import mockFormulas from '../data/formulas.json';
 
-const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionName }) => {
+const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionName, numDays }) => {
     const [rowsData, setRowsData] = useState([]);
     const [ingredients, setIngredients] = useState([]);
     const [amountType, setAmountType] = useState('relative');
@@ -162,7 +162,8 @@ const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionNa
         formulaData += `Date: ${currentDate}\n`;
         formulaData += `Condition: ${conditionName || "Unknown"}\n`;
         formulaData += `Formula: ${formulaTitle}\n`;
-        formulaData += `Dosage: ${dosageInstructions}\n\n`;
+        formulaData += `Dosage: ${dosageInstructions}\n`;
+        formulaData += `Duration: ${numDays} days\n\n`;
         formulaData += "Name\tAmount (g)\tPercentage (%)\n";
     
         // Process ingredients
