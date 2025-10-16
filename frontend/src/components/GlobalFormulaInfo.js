@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const GlobalFormulaInfo = ({ totalMass, setTotalMass }) => {
-    const [massPerDay, setMassPerDay] = useState(9); // Default 9g
-    const [numDays, setNumDays] = useState(14);     // Default 14 days
+const GlobalFormulaInfo = ({ totalMass, setTotalMass, numDays, setNumDays }) => {
+    const [massPerDay, setMassPerDay] = useState(6); // Default 9g
 
     // Update total mass when massPerDay or numDays changes
     useEffect(() => {

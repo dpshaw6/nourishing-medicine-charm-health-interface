@@ -9,8 +9,8 @@ const App = () => {
     const [patientName, setPatientName] = useState(''); // Text field for patient name
     const [conditionName, setConditionName] = useState(''); // Text field for condition name
     const [selectedFormulaId, setSelectedFormulaId] = useState('');
-    const [totalMass, setTotalMass] = useState(126); // Default total mass
-    const [numDays, setNumDays] = useState(14);
+    const [totalMass, setTotalMass] = useState(42); // Default total mass
+    const [numDays, setNumDays] = useState(7);
 
     return (
         <div className="app-container">

@@ -205,21 +205,7 @@ const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionNa
     };
         
     return (
-        <div>
-            {/* Formula Name Input */}
-            <div style={{ marginBottom: '10px', textAlign: 'center' }}>
-                <label>
-                    Formula Name:&nbsp;
-                    <input 
-                        type="text" 
-                        value={formulaName} 
-                        onChange={(e) => setFormulaName(e.target.value)} 
-                        placeholder="Enter formula name"
-                        style={{ width: '250px', padding: '5px' }}
-                    />
-                </label>
-            </div>
-    
+        <div>  
             {/* Dosage Instructions Input */}
             <div style={{ marginBottom: '10px', textAlign: 'center' }}>
                 <label>
