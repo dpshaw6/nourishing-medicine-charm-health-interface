@@ -48,3 +48,6 @@ The application should now be running on your local server.
 
 ## Contributing
 Contributions to this project are welcome. Please fork the repository and submit a pull request with your proposed changes.
+
+## Notes
+Much of my recent work is in private repositories or internal systems. This project represents a public example of applied, production-oriented software supporting real users.
