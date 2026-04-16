@@ -3,7 +3,7 @@ import IngredientRow from './IngredientRow';
 import IngredientPopup from './IngredientPopup';
 import mockFormulas from '../data/formulas.json';
 
-const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionName, numDays }) => {
+const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionName, numDays, onClearAll }) => {
     const [rowsData, setRowsData] = useState([]);
     const [ingredients, setIngredients] = useState([]);
     const [amountType, setAmountType] = useState('relative');
@@ -159,6 +159,7 @@ const IngredientRows = ({ selectedFormulaId, totalMass, patientName, conditionNa
         setDosage('3 scoops twice a day');
         setTotalPatientCost(0);
         setTotalProviderCost(0);
+        if (onClearAll) onClearAll();
     };    
 
     const copyFormulaToClipboard = () => {
