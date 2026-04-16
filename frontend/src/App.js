@@ -12,6 +12,14 @@ const App = () => {
     const [totalMass, setTotalMass] = useState(42); // Default total mass
     const [numDays, setNumDays] = useState(7);
 
+    const handleClearAll = () => {
+        setPatientName('');
+        setConditionName('');
+        setSelectedFormulaId('');
+        setTotalMass(42);
+        setNumDays(7);
+    };
+
     return (
         <div className="app-container">
             <table style={{ width: '100%', textAlign: 'center' }}>
@@ -49,20 +57,21 @@ const App = () => {
                 </tbody>
             </table>
             <div className="row">
-            <GlobalFormulaInfo 
-                totalMass={totalMass} 
+            <GlobalFormulaInfo
+                totalMass={totalMass}
                 setTotalMass={setTotalMass}
                 numDays={numDays}
                 setNumDays={setNumDays}
                 />
             </div>
             <h3 style={{ textAlign: 'center' }}>Formula</h3>
-            <IngredientRows 
-                selectedFormulaId={selectedFormulaId} 
-                totalMass={totalMass} 
-                patientName={patientName} 
-                conditionName={conditionName} 
+            <IngredientRows
+                selectedFormulaId={selectedFormulaId}
+                totalMass={totalMass}
+                patientName={patientName}
+                conditionName={conditionName}
                 numDays={numDays}
+                onClearAll={handleClearAll}
             />
             <ActionButtons />
         </div>
